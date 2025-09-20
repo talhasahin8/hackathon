@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeşil Yaşam | Sürdürülebilir Moda</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================= */
+        /* TEMEL STİLLER & DEĞİŞKENLER               */
+        /* ========================================= */
+        :root {
+            --primary-color: #38b488;
+            --secondary-color: #1a7356;
+            --accent-color: #e67e22;
+            --background-color: #f0f8f5;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --light-text-color: #f0f0f0;
+            --border-color: #dddddd;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --btn-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            --btn-shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Karanlık Tema */
+        body.dark-mode {
+            --background-color: #121212;
+            --card-background: #1e1e1e;
+            --text-color: #e2e8f0;
+            --primary-color: #48bb78;
+            --secondary-color: #38a169;
+            --accent-color: #f6ad55;
+            --light-text-color: #f0f0f0;
+            --border-color: #4a5568;
+            --shadow-color: rgba(255, 255, 255, 0.05);
+            --btn-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            --btn-shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Genel Ayarlar */
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.5s, color 0.5s;
+            position: relative;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--secondary-color);
+        }
+
+        /* ========================================= */
+        /* ANİMASYONLU ARKA PLAN                     */
+        /* ========================================= */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(56, 180, 136, 0.2), rgba(26, 115, 86, 0.2));
+            z-index: -1;
+            overflow: hidden;
+        }
+        .animated-bg span {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: move-blobs 15s infinite ease-in-out;
+        }
+        .animated-bg span:nth-child(1) { top: 10%; left: 20%; width: 60px; height: 60px; animation-delay: 0s; }
+        .animated-bg span:nth-child(2) { top: 50%; left: 70%; width: 90px; height: 90px; animation-delay: 5s; }
+        .animated-bg span:nth-child(3) { top: 80%; left: 40%; width: 120px; height: 120px; animation-delay: 10s; }
+        
+        @keyframes move-blobs {
+            0% { transform: translateY(0) scale(1); opacity: 0.5; }
+            50% { transform: translateY(-50vh) scale(1.5); opacity: 0.2; }
+            100% { transform: translateY(0) scale(1); opacity: 0.5; }
+        }
+
+        /* ========================================= */
+        /* LAYOUT & KOMPONENTLER                     */
+        /* ========================================= */
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; }
+        .section-card {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        
+        /* ========================================= */
+        /* TÜM BUTONLAR VE ETKİLEŞİMLER              */
+        /* ========================================= */
+        .interactive-btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .interactive-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--btn-shadow-hover);
+        }
+        .interactive-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        /* Özel buton stilleri */
+        .cta-button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            box-shadow: var(--btn-shadow);
+        }
+        .cta-button:hover { background-color: #d1711f; }
+        
+        /* Tema Değiştirme Butonu */
+        #theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+        }
+        #theme-toggle:hover { background-color: rgba(255, 255, 255, 0.3); }
+
+        /* Navigasyon Butonları */
+        nav a, #contact-button {
+            color: white;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background: transparent;
+            box-shadow: none;
+        }
+        nav a:hover, #contact-button:hover { background-color: rgba(255, 255, 255, 0.1); }
+        nav a:active, #contact-button:active { background-color: rgba(255, 255, 255, 0.2); }
+
+        /* Tab Menü Butonları */
+        .tab-button {
+            background-color: transparent;
+            border: none;
+            padding: 12px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--secondary-color);
+            border-radius: 8px 8px 0 0;
+            box-shadow: none !important;
+        }
+        .tab-button.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 -4px 0 var(--primary-color) inset !important;
+            transform: translateY(0px) !important;
+        }
+        .tab-button:hover:not(.active) { background-color: rgba(56, 180, 136, 0.1); }
+
+        /* FAQ Butonları */
+        .faq-question {
+            background-color: var(--card-background);
+            padding: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary-color);
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+        }
+        .faq-question:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .faq-question:active { transform: translateY(1px); }
+
+        /* Quiz Seçenekleri */
+        .quiz-option {
+            background-color: #f7f7f7;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .quiz-option:hover {
+            background-color: #ebebeb;
+            transform: scale(1.01);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        .quiz-option.selected {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+        .quiz-option.correct {
+            background-color: #4CAF50; color: white; font-weight: 600;
+            box-shadow: 0 0 0 2px #4CAF50;
+        }
+        .quiz-option.incorrect {
+            background-color: #F44336; color: white; font-weight: 600;
+            box-shadow: 0 0 0 2px #F44336;
+        }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); animation: fadeInModal 0.3s; }
+        .modal-content { background-color: var(--card-background); margin: 15% auto; padding: 2rem; border-radius: 12px; max-width: 500px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); position: relative; animation: slideInModal 0.4s; }
+        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInModal { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-button { position: absolute; right: 20px; top: 10px; color: var(--text-color); font-size: 2rem; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        .close-button:hover { transform: rotate(90deg); }
+        form input, form textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 5px; font-family: 'Montserrat', sans-serif; background-color: var(--background-color); color: var(--text-color); }
+        .modal h3 { margin-top: 0; }
+        
+        /* Diğer Genel İyileştirmeler */
+        .hero-header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: var(--light-text-color); padding: 6rem 2rem 2rem; text-align: center; position: relative; box-shadow: 0 5px 20px var(--shadow-color); }
+        /* Logo ve Başlık Stilleri */
+        .site-branding { display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        .site-logo { font-size: 3rem; margin-right: 15px; }
+        .site-name { color: white; font-size: 3.5rem; margin: 0; position: relative; }
+        .hero-header p { font-size: 1.3rem; margin-top: 0.5rem; opacity: 0.9; position: relative; }
+        
+        #counter-section { text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, var(--accent-color), #d35400); color: white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        #counter-section h2 { color: white; font-size: 2.5rem; margin-bottom: 1rem; }
+        #counter-number { font-size: 5rem; font-weight: 700; margin: 0; line-height: 1; }
+        #daily-fact { text-align: center; padding: 1.5rem; font-style: italic; border-radius: 8px; background-color: var(--background-color); border: 1px solid var(--border-color); margin-bottom: 2rem; opacity: 0; animation: fadeIn 1s ease-in-out forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        #quiz-status { font-weight: bold; font-size: 1.2rem; margin-bottom: 1rem; }
+        #quiz-score { font-size: 2rem; font-weight: bold; color: var(--primary-color); }
+        .quiz-option.selected { box-shadow: 0 0 0 2px var(--primary-color); }
+        ul { list-style: none; padding: 0; }
+        ul li { padding: 0.7rem 0; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; }
+        ul li:last-child { border-bottom: none; }
+        ul li::before { content: '🌿'; margin-right: 10px; font-size: 1.2rem; }
+        footer { text-align: center; padding: 2rem; background-color: var(--secondary-color); color: var(--light-text-color); margin-top: 2rem; }
+        
+        /* Duyarlı Tasarım */
+        @media (max-width: 768px) {
+            .hero-header { padding: 3rem 1rem; }
+            .site-name { font-size: 2rem; }
+            .section-card { padding: 1.5rem; }
+            .tab-menu { flex-wrap: wrap; justify-content: center; }
+            .site-logo { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="animated-bg">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <header class="hero-header">
+        <button id="theme-toggle" class="interactive-btn" aria-label="Temayı Değiştir">☀️</button>
+        <nav>
+            <a href="#giris" class="interactive-btn">Giriş</a>
+            <a href="#counter-section" class="interactive-btn">İstatistikler</a>
+            <a href="#interaktif-bolumler" class="interactive-btn">Keşfet</a>
+            <button class="cta-button interactive-btn" id="contact-button" aria-controls="contact-modal" aria-expanded="false">İletişim</button>
+        </nav>
+        <div class="site-branding">
+            <span class="site-logo">🌿</span>
+            <h1 class="site-name">Yeşil Yaşam</h1>
+        </div>
+        <p>Bilgi edinin, farkındalık yaratın ve harekete geçin.</p>
+    </header>
+
+    <div class="container">
+        <section class="section-card" id="giris">
+            <h2>Neden Tekstil Atıkları Önemli?</h2>
+            <p>Her yıl, dünya genelinde milyonlarca ton giysi ve tekstil ürünü çöplüklere karışıyor. Bu atıklar, sentetik malzemeler içerdiğinden doğada yüzyıllarca çözünmeden kalabiliyor ve hem toprak hem de su kaynakları için ciddi bir tehdit oluşturuyor. Bu platform, bu küresel soruna dikkat çekmek ve sürdürülebilir yaşam için pratik çözümler sunmak amacıyla tasarlandı.</p>
+        </section>
+
+        <section id="daily-fact">
+            <p><strong>Günün Bilgisi:</strong> <span id="fact-text"></span></p>
+        </section>
+    </div>
+
+    <section id="counter-section">
+        <h2>Dünya Genelinde Geri Dönüşüm Oranı</h2>
+        <p>Tahmini geri dönüştürülmüş tekstil atığı:</p>
+        <p id="counter-number">0</p>
+        <p>milyon ton</p>
+    </section>
+
+    <div class="container">
+        <section class="section-card" id="interaktif-bolumler">
+            <h2>Daha Fazla Keşfedin</h2>
+            <div class="tab-menu">
+                <button class="tab-button interactive-btn active" data-tab="tab-cozumler">Çözüm Yolları</button>
+                <button class="tab-button interactive-btn" data-tab="tab-faq">Sıkça Sorulan Sorular</button>
+                <button class="tab-button interactive-btn" data-tab="tab-bilginizi-test-edin">Bilginizi Test Edin</button>
+            </div>
+            <div id="tab-cozumler" class="tab-content active">
+                <h3>Sürdürülebilirlik İçin Atılacak Adımlar</h3>
+                <p>Tekstil atıklarını azaltmak için hepimizin uygulayabileceği basit ve etkili yöntemler:</p>
+                <ul>
+                    <li>**Akıllı Tüketim:** Moda trendleri yerine, uzun ömürlü ve kaliteli giysileri tercih edin.</li>
+                    <li>**Yeniden Kullanım:** Kullanmadığınız giysileri bağışlayın, takas edin veya ikinci el pazarlarında değerlendirin.</li>
+                    <li>**Onarım:** Küçük hasarları tamir ederek giysilerinizin ömrünü uzatın.</li>
+                    <li>**Geri Dönüşüm:** Giysilerinizi geri dönüşüm kumbaralarına atarak yeni ürünlere dönüşmesini sağlayın.</li>
+                </ul>
+                <button class="cta-button interactive-btn" id="bilgi-butonu">Yerel Geri Dönüşüm Noktalarını Bul</button>
+            </div>
+            <div id="tab-faq" class="tab-content">
+                <h3>Sıkça Sorulan Sorular (SSS)</h3>
+                <div class="faq-item">
+                    <div class="faq-question interactive-btn">Tekstil atıkları çevreye nasıl zarar verir?</div>
+                    <div class="faq-answer">Tekstil atıkları, özellikle sentetik kumaşlar, doğada çok yavaş çözünür ve mikroplastik kirliliğine neden olur. Boyalar ve kimyasallar suya ve toprağa karışarak ekosistemi bozar.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question interactive-btn">Hangi tür kumaşlar daha sürdürülebilir?</div>
+                    <div class="faq-answer">Organik pamuk, keten, kenevir, lyocell (Tencel) gibi doğal ve yenilenebilir kaynaklardan elde edilen kumaşlar genellikle daha sürdürülebilirdir. Geri dönüştürülmüş kumaşlar da iyi bir seçenektir.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question interactive-btn">Eski kıyafetlerimi nereye verebilirim?</div>
+                    <div class="faq-answer">Belediyelerin veya özel kuruluşların tekstil geri dönüşüm kumbaralarına atabilir, ikinci el mağazalarına bağışlayabilir veya takas etkinliklerine katılabilirsiniz.</div>
+                </div>
+            </div>
+            <div id="tab-bilginizi-test-edin" class="tab-content">
+                <h3>Bilginizi Test Edin!</h3>
+                <div id="quiz-status"></div>
+                <div id="quiz-area">
+                    <p id="quiz-question">Soru yükleniyor...</p>
+                    <div id="quiz-options"></div>
+                    <button class="cta-button interactive-btn" id="submit-quiz" style="margin-top: 15px;">Cevabı Kontrol Et</button>
+                    <p id="quiz-result"></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Yeşil Yaşam. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <div id="contact-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <span class="close-button interactive-btn" role="button" aria-label="Kapat">&times;</span>
+            <h3 id="modal-title">Bize Ulaşın</h3>
+            <p>Sürdürülebilirlik hakkında düşüncelerinizi paylaşın.</p>
+            <form id="contact-form">
+                <input type="text" id="name" name="name" placeholder="Adınız Soyadınız" required>
+                <input type="email" id="email" name="email" placeholder="E-posta Adresiniz" required>
+                <textarea id="message" name="message" rows="4" placeholder="Mesajınız..." required></textarea>
+                <button type="submit" class="cta-button interactive-btn">Gönder</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // =========================================
+        // JAVASCRİPT LOGİĞİ                       
+        // ========================================= 
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggleBtn.textContent = '🌙';
+            } else {
+                themeToggleBtn.textContent = '☀️';
+            }
+            themeToggleBtn.addEventListener('click', () => {
+                const isDarkMode = body.classList.toggle('dark-mode');
+                themeToggleBtn.textContent = isDarkMode ? '🌙' : '☀️';
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            });
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            const facts = [
+                "Bir tişört üretmek için yaklaşık 2.700 litre su harcanır. Bu, bir insanın 2.5 yılda içtiği su miktarıdır.",
+                "Fast fashion (hızlı moda) endüstrisi, küresel karbon emisyonlarının %10'undan sorumludur.",
+                "Dünya genelinde üretilen tekstillerin %85'i çöplüklere atılmaktadır.",
+                "Eski bir kot pantolon, araba koltuğu yastığı veya bina yalıtımı gibi birçok farklı ürüne dönüştürülebilir."
+            ];
+            const factTextElement = document.getElementById('fact-text');
+            function updateFact() {
+                const randomFact = facts[Math.floor(Math.random() * facts.length)];
+                factTextElement.textContent = randomFact;
+            }
+            updateFact();
+            setInterval(updateFact, 10000);
+            const counterElement = document.getElementById('counter-number');
+            const targetNumber = 80;
+            const duration = 2000;
+            let startTimestamp = null;
+            const animateCounter = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = timestamp - startTimestamp;
+                const value = Math.min(targetNumber, Math.floor((progress / duration) * targetNumber));
+                counterElement.textContent = value;
+                if (progress < duration) {
+                    requestAnimationFrame(animateCounter);
+                }
+            };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        requestAnimationFrame(animateCounter);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            observer.observe(document.getElementById('counter-section'));
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(button.dataset.tab).classList.add('active');
+                });
+            });
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    question.classList.toggle('active');
+                    const answer = question.nextElementSibling;
+                    answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+                });
+            });
+            const quizData = [
+                { question: "Aşağıdakilerden hangisi tekstil atıklarının çevreye verdiği zararlardan biri değildir?", options: ["Mikroplastik kirliliği", "Su kirliliği", "Hava kirliliği", "Toprak verimliliğini artırma"], correct: 3 },
+                { question: "Hangi kumaş türü doğada en uzun süre çözünmeden kalır?", options: ["Pamuk", "Polyester", "Keten", "Yün"], correct: 1 },
+                { question: "Eski bir tişörtü yeniden kullanmanın yaratıcı bir yolu nedir?", options: ["Direkt çöpe atmak", "Temizlik bezi yapmak", "Yakmak", "Denize atmak"], correct: 1 },
+                { question: "Bir tişörtün üretiminde ortalama kaç litre su harcanır?", options: ["270 litre", "2700 litre", "27000 litre", "2.7 litre"], correct: 1 },
+                { question: "Aşağıdakilerden hangisi 'fast fashion' (hızlı moda) tanımına en uygun ifadedir?", options: ["Çevreyi önemseyen, yavaş ve etik üretim yapan moda akımı.", "Moda trendlerini hızla taklit eden ve düşük maliyetle seri üretim yapan ticari model.", "Sadece geri dönüştürülmüş malzemeler kullanan moda şirketleri.", "Sınırlı sayıda, el yapımı giysiler üreten butikler."], correct: 1 },
+                { question: "Organik pamuğun geleneksel pamuğa göre en önemli çevresel avantajı nedir?", options: ["Daha hızlı kurur ve daha dayanıklıdır.", "Sadece suyla sulanır, hiç su harcamaz.", "Genetiği değiştirilmiş tohumlar ve sentetik pestisitler kullanılmadan yetiştirilir.", "Daha ucuzdur ve bu nedenle daha çok üretilir."], correct: 2 },
+                { question: "Giysilerdeki mikroplastik salınımını azaltmak için ne yapılabilir?", options: ["Giysileri daha sık yıkamak", "Giysileri yüksek sıcaklıkta yıkamak", "Sentetik elyaflardan yapılmış giysileri tercih etmek", "Doğal elyaflardan yapılmış giysileri tercih etmek ve özel yıkama torbaları kullanmak"], correct: 3 },
+                { question: "Bir giysinin 'döngüsel moda' (circular fashion) prensibine uygun olması ne anlama gelir?", options: ["Sadece çok pahalı markaların giysileri olması.", "Tek kullanımlık olarak üretilmesi ve kolayca atılabilmesi.", "Tasarımından atık yönetimine kadar, mümkün olduğunca uzun süre kullanılması ve döngüde kalması.", "Her sezon yeni trendlerle yenilenmesi."], correct: 2 },
+                { question: "Aşağıdaki sürdürülebilir giysi materyallerinden hangisi ağaç hamurundan üretilir?", options: ["Organik Pamuk", "Polyester", "Lyocell (Tencel)", "Yün"], correct: 2 },
+                { question: "Bir giysinin karbon ayak izini azaltmak için en etkili yöntem hangisidir?", options: ["Giysiyi sık sık kuru temizlemeye vermek.", "Mümkün olduğunca çok yeni giysi satın almak.", "Giysinin ömrünü uzatmak, tamir etmek ve yeniden kullanmak.", "Giysiyi çamaşır makinesinde her zaman kısa programda yıkamak."], correct: 2 }
+            ];
+            
+            let currentQuizIndex = 0;
+            let score = 0;
+            let answered = false;
+            const quizQuestionElement = document.getElementById('quiz-question');
+            const quizOptionsElement = document.getElementById('quiz-options');
+            const submitQuizButton = document.getElementById('submit-quiz');
+            const quizResultElement = document.getElementById('quiz-result');
+            const quizStatusElement = document.getElementById('quiz-status');
+
+            function updateQuizStatus() {
+                quizStatusElement.textContent = `Soru ${currentQuizIndex + 1}/${quizData.length} | Doğru Sayısı: ${score}`;
+            }
+
+            function loadQuestion() {
+                if (currentQuizIndex >= quizData.length) {
+                    quizQuestionElement.textContent = `Bilgi yarışması tamamlandı! Skorunuz: ${score}/${quizData.length}`;
+                    quizOptionsElement.innerHTML = '';
+                    submitQuizButton.textContent = "Yeniden Başla";
+                    quizResultElement.textContent = "Bilginizi tazelemek için baştan başlayabilirsiniz.";
+                    return;
+                }
+                const quiz = quizData[currentQuizIndex];
+                quizQuestionElement.textContent = quiz.question;
+                quizOptionsElement.innerHTML = '';
+                quizResultElement.textContent = '';
+                submitQuizButton.textContent = "Cevabı Kontrol Et";
+                answered = false;
+                quiz.options.forEach((optionText, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.classList.add('quiz-option', 'interactive-btn');
+                    optionDiv.textContent = optionText;
+                    optionDiv.dataset.index = index;
+                    optionDiv.addEventListener('click', () => {
+                        if (answered) return;
+                        const prevSelected = document.querySelector('.quiz-option.selected');
+                        if (prevSelected) {
+                            prevSelected.classList.remove('selected');
+                        }
+                        optionDiv.classList.add('selected');
+                    });
+                    quizOptionsElement.appendChild(optionDiv);
+                });
+                updateQuizStatus();
+            }
+            submitQuizButton.addEventListener('click', () => {
+                if (submitQuizButton.textContent === "Yeniden Başla") {
+                    currentQuizIndex = 0;
+                    score = 0;
+                    loadQuestion();
+                    return;
+                }
+                if (answered) {
+                    currentQuizIndex++;
+                    loadQuestion();
+                    return;
+                }
+                const selectedOption = document.querySelector('.quiz-option.selected');
+                if (!selectedOption) {
+                    quizResultElement.textContent = "Lütfen bir seçenek belirleyin.";
+                    return;
+                }
+                answered = true;
+                const selectedIndex = parseInt(selectedOption.dataset.index);
+                const quiz = quizData[currentQuizIndex];
+                document.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+                
+                if (selectedIndex === quiz.correct) {
+                    selectedOption.classList.add('correct');
+                    quizResultElement.textContent = "Doğru cevap! Harika.";
+                    score++;
+                } else {
+                    selectedOption.classList.add('incorrect');
+                    document.querySelector(`.quiz-option[data-index="${quiz.correct}"]`).classList.add('correct');
+                    quizResultElement.textContent = "Yanlış cevap. Doğrusu işaretlendi.";
+                }
+                updateQuizStatus();
+                submitQuizButton.textContent = "Sonraki Soru";
+            });
+            loadQuestion();
+
+            // Geri dönüşüm butonu işlevi
+            const bilgiButonu = document.getElementById('bilgi-butonu');
+            bilgiButonu.addEventListener('click', () => {
+                window.open('https://www.google.com/search?q=yakınımdaki+tekstil+geri+dönüşüm+noktaları', '_blank');
+            });
+
+            // İletişim formu modal işlevi
+            const contactButton = document.getElementById('contact-button');
+            const contactModal = document.getElementById('contact-modal');
+            const closeModalBtn = document.querySelector('.close-button');
+            const contactForm = document.getElementById('contact-form');
+            contactButton.addEventListener('click', () => {
+                contactModal.style.display = 'block';
+                contactButton.setAttribute('aria-expanded', 'true');
+            });
+            closeModalBtn.addEventListener('click', () => {
+                contactModal.style.display = 'none';
+                contactButton.setAttribute('aria-expanded', 'false');
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target === contactModal) {
+                    contactModal.style.display = 'none';
+                    contactButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Mesajınız başarıyla gönderildi! Teşekkür ederiz.');
+                contactModal.style.display = 'none';
+                contactForm.reset();
+                contactButton.setAttribute('aria-expanded', 'false');
+            });
+        });
+    </script>
+</body>
+</html>
